@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Assignment_Two</string>
+    <string name="taskbtntext">Tasks</string>
+    <string name="taskbtncompleted">Completed</string>
+    <string name="taskbtnadd">Add Task</string>
+    <string name="titlehint">Task Title</string>
+    <string name="detailhint">Task Details</string>
+    <string name="savebtntext">Save</string>
+    <string name="title">Task Title</string>
+    <string name="details">Task Details</string>
+</resources>
