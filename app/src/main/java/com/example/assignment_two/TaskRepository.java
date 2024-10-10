@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class TaskRepository {
     private static TaskRepository instance;
-    private final ArrayList<Task> tasks;           // Active tasks
-    private final ArrayList<Task> completedTasks;  // Completed tasks
+    private final ArrayList<Task> tasks;
+    private final ArrayList<Task> completedTasks;
 
     private TaskRepository() {
         tasks = new ArrayList<>();
@@ -33,7 +33,7 @@ public class TaskRepository {
     }
 
     public void completeTask(Task task) {
-        tasks.remove(task);              // Remove from active tasks
-        completedTasks.add(task);        // Add to completed tasks
+        tasks.remove(task);
+        completedTasks.add(task);
     }
 }

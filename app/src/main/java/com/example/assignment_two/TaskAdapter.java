@@ -24,7 +24,6 @@ public class TaskAdapter extends ArrayAdapter<Task> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Task task = getItem(position);
 
-        // Inflate different layout depending on whether the task is completed
         if (task.isCompleted()) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.single_item_completed_design, parent, false);
             TextView completedTaskTitle = convertView.findViewById(R.id.completedTaskTitle);
@@ -43,18 +42,22 @@ public class TaskAdapter extends ArrayAdapter<Task> {
             taskDetails.setText(task.getDetails());
             taskCheckbox.setChecked(task.isCompleted());
 
-            // Handle checkbox click
             taskCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 task.setCompleted(isChecked);
                 if (isChecked) {
-                    TaskRepository.getInstance().completeTask(task); // Move task to completed
-                    notifyDataSetChanged(); // Refresh the list
+                    TaskRepository.getInstance().completeTask(task);
+                    notifyDataSetChanged();
+
+                    if (getContext() instanceof MainActivity) {
+                        ((MainActivity) getContext()).clearTaskDetails();
+                    }
                 }
             });
 
-            // Handle item click for showing details
             convertView.setOnClickListener(v -> {
-                ((MainActivity) getContext()).showTaskDetails(task.getTitle(), task.getDetails());
+                if (task != null) {
+                    ((MainActivity) getContext()).showTaskDetails(task.getTitle(), task.getDetails());
+                }
             });
         }
 

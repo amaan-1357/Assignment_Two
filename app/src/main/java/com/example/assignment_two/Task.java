@@ -8,7 +8,7 @@ public class Task {
     public Task(String title, String details) {
         this.title = title;
         this.details = details;
-        this.isCompleted = false;  // Default value for new tasks
+        this.isCompleted = false;
     }
 
     public String getTitle() {

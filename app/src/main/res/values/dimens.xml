@@ -4,4 +4,8 @@
     <dimen name="margin">16dp</dimen>
     <dimen name="textsize">18sp</dimen>
     <dimen name="detailsize">14sp</dimen>
+    <dimen name="logowidth">155dp</dimen>
+    <dimen name="logoheight">147dp</dimen>
+    <dimen name="height_with_weights">0dp</dimen>
+    <dimen name="width_with_weights">0dp</dimen>
 </resources>

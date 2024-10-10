@@ -19,7 +19,6 @@ public class TaskListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         ListView listView = view.findViewById(R.id.mylist);
 
-        // Get the latest tasks from the repository
         adapter = new TaskAdapter(getActivity(), TaskRepository.getInstance().getTasks());
         listView.setAdapter(adapter);
 
@@ -29,7 +28,6 @@ public class TaskListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Refresh the adapter when coming back to this fragment
         adapter.notifyDataSetChanged();
     }
 }

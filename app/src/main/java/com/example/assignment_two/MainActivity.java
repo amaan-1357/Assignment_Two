@@ -1,42 +1,94 @@
 package com.example.assignment_two;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import android.view.View;
 import android.widget.Button;
+
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // Only reference portrait layout
 
-        // Load the Task List Fragment when the app starts
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new TaskListFragment())
-                .commit();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setContentView(R.layout.activity_main_land);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_task_list, new TaskListFragment())
+                    .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail, new DetailFragment())
+                    .commit();
+        } else {
+            setContentView(R.layout.activity_main);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new TaskListFragment())
+                    .commit();
+        }
 
-        // Set up button listeners
         setupButtons();
     }
 
     private void setupButtons() {
         Button btnTasks = findViewById(R.id.btn_tasks);
         Button btnCompleted = findViewById(R.id.btn_completed);
-        Button btnAdd = findViewById(R.id.btn_add);
 
-        btnTasks.setOnClickListener(view -> loadFragment(new TaskListFragment()));
-        btnCompleted.setOnClickListener(view -> loadFragment(new CompletedTasksFragment()));
-        btnAdd.setOnClickListener(view -> loadFragment(new AddTaskFragment()));
+        btnTasks.setOnClickListener(view -> {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_task_list, new TaskListFragment())
+                        .commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_detail, new DetailFragment())
+                        .commit();
+                findViewById(R.id.fragment_task_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.fragment_detail).setVisibility(View.VISIBLE);
+                findViewById(R.id.fragment_add).setVisibility(View.GONE);
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new TaskListFragment())
+                        .commit();
+            }
+        });
+
+        btnCompleted.setOnClickListener(view -> {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_task_list, new CompletedTasksFragment())
+                        .commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_detail, new DetailFragment())
+                        .commit();
+                findViewById(R.id.fragment_task_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.fragment_detail).setVisibility(View.VISIBLE);
+                findViewById(R.id.fragment_add).setVisibility(View.GONE);
+
+            } else {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new CompletedTasksFragment())
+                        .commit();
+            }
+        });
     }
 
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+    public void addTask(View view){
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            findViewById(R.id.fragment_task_list).setVisibility(View.GONE);
+            findViewById(R.id.fragment_detail).setVisibility(View.GONE);
+            findViewById(R.id.fragment_add).setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_add, new AddTaskFragment())
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new AddTaskFragment())
+                    .commit();
+        }
     }
+
 
     public void showTaskDetails(String title, String details) {
         DetailFragment detailFragment = new DetailFragment();
@@ -44,10 +96,46 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("title", title);
         bundle.putString("details", details);
         detailFragment.setArguments(bundle);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail, detailFragment)
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, detailFragment)
+                    .commit();
+        }
+    }
 
+    public void saveTask() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null)
+                .replace(R.id.fragment_task_list, new TaskListFragment())
                 .commit();
+        findViewById(R.id.fragment_task_list).setVisibility(View.VISIBLE);
+        findViewById(R.id.fragment_detail).setVisibility(View.VISIBLE);
+        findViewById(R.id.fragment_add).setVisibility(View.GONE);
+        }else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new TaskListFragment())
+                    .commit();
+        }
+
+    }
+    public void clearTaskDetails() {
+        DetailFragment detailFragment = new DetailFragment();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail, detailFragment)
+                    .commit();
+        }
+        else{
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, detailFragment)
+                    .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new TaskListFragment())
+                    .commit();
+        }
     }
 }

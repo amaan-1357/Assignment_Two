@@ -1,13 +1,14 @@
 package com.example.assignment_two;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 public class AddTaskFragment extends Fragment {
@@ -15,9 +16,8 @@ public class AddTaskFragment extends Fragment {
     private EditText taskTitleInput;
     private EditText taskDetailsInput;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_task, container, false);
 
         taskTitleInput = view.findViewById(R.id.taskTitleInput);
@@ -28,20 +28,28 @@ public class AddTaskFragment extends Fragment {
             String title = taskTitleInput.getText().toString();
             String details = taskDetailsInput.getText().toString();
 
-            // Create and add the new task to the repository
-            Task newTask = new Task(title, details);
-            TaskRepository.getInstance().addTask(newTask);
+            closeKeyboard();
+            if (title.isEmpty() || details.isEmpty()) {
+                Toast.makeText(getContext(), "Title and Details cannot be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                Task newTask = new Task(title, details);
+                TaskRepository.getInstance().addTask(newTask);
 
-            // Clear the input fields
-            taskTitleInput.setText("");
-            taskDetailsInput.setText("");
 
-            // Optionally navigate back to Task List Fragment
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new TaskListFragment())
-                    .commit();
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).saveTask();
+                }
+            }
         });
 
         return view;
+    }
+
+    private void closeKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

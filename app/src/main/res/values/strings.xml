@@ -8,4 +8,5 @@
     <string name="savebtntext">Save</string>
     <string name="title">Task Title</string>
     <string name="details">Task Details</string>
+    <string name="todo">TODO</string>
 </resources>
